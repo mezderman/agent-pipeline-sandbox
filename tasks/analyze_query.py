@@ -53,6 +53,6 @@ class AnalyzeQuery(BaseTask):
             "AnalyzeQuery": result
         })
         
-        print(f"Analyzing issue with data: {issue_data}")
+        # print(f"Analyzing issue with data: {issue_data}")
         return event
 

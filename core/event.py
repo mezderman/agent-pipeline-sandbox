@@ -32,7 +32,7 @@ class AnalyzeIssueData(EventData):
 
 class Event(BaseModel):
     event_key: str = Field(..., description="Key identifying the type of event")
-    data: Dict[str, Any] = Field(default_factory=dict, description="Event data")
+    data: Dict[str, Any] = Field(default_factory=lambda: {"nodes": []})
 
     def get_validated_data(self) -> EventData:
         """Returns type-validated data based on event_key"""
@@ -48,7 +48,11 @@ class EventFactory:
     @staticmethod
     def create_event(event_key: str, data: Dict[str, Any]) -> Event:
         """Create and validate an event instance"""
-        event = Event(event_key=event_key, data=data)
+        # Merge input data with EventData defaults
+        base_data = EventData().model_dump()
+        base_data.update(data)
+        
+        event = Event(event_key=event_key, data=base_data)
         # Validate the data based on event type
         event.get_validated_data()
         return event
