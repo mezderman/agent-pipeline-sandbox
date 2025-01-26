@@ -26,9 +26,7 @@ class AnalyzeQuery(BaseTask):
             reason=(str, Field(description="The reason for selecting this category"))
         )
        
-        
     def route(self, query: str):
-       
         choice = self.client.chat.completions.create(
             model=self.model,
             response_model=self.response_model,
@@ -43,15 +41,18 @@ class AnalyzeQuery(BaseTask):
     
     def execute(self, event: Event) -> Event:
         print("Analyzing issue...")
-        # Access the event data
         issue_data = event.data
         result = self.route(issue_data['issue_description'])
-        print(result)
+        
+        # Initialize nodes list if it doesn't exist
+        if 'nodes' not in event.data:
+            event.data['nodes'] = []
+            
+        # Add to nodes with AnalyzeQuery key
+        event.data['nodes'].append({
+            "AnalyzeQuery": result
+        })
+        
         print(f"Analyzing issue with data: {issue_data}")
-        
-        # You can modify the data or add validation results
-        event.data['validation_passed'] = True
-        event.data['validation_timestamp'] = '2024-03-21'  # example
-        
-        return event 
+        return event
 

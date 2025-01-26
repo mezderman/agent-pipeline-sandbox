@@ -1,9 +1,13 @@
 from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
 
+
 class EventData(BaseModel):
     """Base model for event data"""
-    pass
+    nodes: List['EventData'] = Field(
+        default_factory=list, 
+        description="List of pipeline processing nodes"
+    )
 
 class ProductIssueData(EventData):
     product_id: str = Field(..., description="ID of the product with issue")
