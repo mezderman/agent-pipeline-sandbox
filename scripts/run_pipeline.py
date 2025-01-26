@@ -6,7 +6,10 @@ if __name__ == "__main__":
     # Step 1: Register all pipelines
     register_all_pipelines()
 
-    # Create sample product issue data
+
+    #TESTING
+
+    # Test Case 1: Product Issue
     product_issue_data = {
         'product_id': 'PROD-123',
         'customer_id': 'CUST-456',
@@ -14,28 +17,28 @@ if __name__ == "__main__":
         'severity': 'high'
     }
     
-    # Create product issue event
-    event = EventFactory.create_event(
-        "product_issue",
-        product_issue_data
-    )
-
-    # # Create sample billing issue data
-    # billing_issue_data = {
-    #     'customer_id': 'CUST-456',
-    #     'amount': 299.99,
-    #     'issue_type': 'overcharge',
-    #     'description': 'Incorrect charges on invoice'
-    # }
+    # Test Case 2: Billing Issue
+    billing_issue_data = {
+        'customer_id': 'CUST-789',
+        'amount': 299.99,
+        'issue_type': 'overcharge',
+        'description': 'Double charged for monthly subscription'
+    }
     
-    # # Create billing issue event∏
-    # event = EventFactory.create_event(
-    #     "billing_issue",
-    #     billing_issue_data
-    # )
+   
+
+    # Choose which test to run
+    test_case = "analyze_query"  # Change this to test different scenarios
+    
+    if test_case == "product_issue":
+        event = EventFactory.create_event("product_issue", product_issue_data)
+    elif test_case == "billing_issue":
+        event = EventFactory.create_event("billing_issue", billing_issue_data)
+    elif test_case == "analyze_query":
+        event = EventFactory.create_event("analyze_query", product_issue_data)
     
     # Get type-validated data
-    validated_data = event.get_validated_data()  # Returns ProductIssueData instance
+    validated_data = event.get_validated_data()
 
     # Get and run the appropriate pipeline
     pipeline = PipelineRegistry.get_pipeline(event)

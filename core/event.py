@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from pydantic import BaseModel, Field
 
 class EventData(BaseModel):
@@ -17,6 +17,15 @@ class BillingIssueData(EventData):
     issue_type: str = Field(..., description="Type of billing issue")
     description: Optional[str] = Field(None, description="Detailed description of the billing issue")
 
+class AnalyzeIssueData(EventData):
+    issue_id: str = Field(..., description="Unique identifier for the issue")
+    issue_type: str = Field(..., description="Type of issue (product/billing/other)")
+    customer_id: str = Field(..., description="ID of the customer")
+    description: str = Field(..., description="Detailed description of the issue")
+    priority: str = Field(..., description="Priority level of the issue")
+    tags: List[str] = Field(default_factory=list, description="Tags for categorizing the issue")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata about the issue")
+
 class Event(BaseModel):
     event_key: str = Field(..., description="Key identifying the type of event")
     data: Dict[str, Any] = Field(default_factory=dict, description="Event data")
@@ -27,6 +36,8 @@ class Event(BaseModel):
             return ProductIssueData(**self.data)
         elif self.event_key == "billing_issue":
             return BillingIssueData(**self.data)
+        elif self.event_key == "analyze_issue":
+            return AnalyzeIssueData(**self.data)
         return EventData(**self.data)
 
 class EventFactory:
