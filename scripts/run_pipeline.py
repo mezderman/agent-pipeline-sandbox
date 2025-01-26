@@ -18,20 +18,7 @@ if __name__ == "__main__":
         "issue_description": "The device I purchased is not charging properly. What should I do?",
     }
     
-    product_issue_data = {
-        'product_id': 'PROD-123',
-        'customer_id': 'CUST-456',
-        'issue_description': 'What are the highlights of this article?',
-        'severity': 'high'
-    }
-    
-    # Test Case 2: Billing Issue
-    billing_issue_data = {
-        'customer_id': 'CUST-789',
-        'amount': 299.99,
-        'issue_type': 'overcharge',
-        'description': 'Double charged for monthly subscription'
-    }
+   
     
    
 
@@ -39,9 +26,9 @@ if __name__ == "__main__":
     test_case = "analyze_query"  # Change this to test different scenarios
     
     if test_case == "product_issue":
-        event = EventFactory.create_event("product_issue", product_issue_data)
+        event = EventFactory.create_event("product_issue", customer_inquiry)
     elif test_case == "billing_issue":
-        event = EventFactory.create_event("billing_issue", billing_issue_data)
+        event = EventFactory.create_event("billing_issue", customer_inquiry)
     elif test_case == "analyze_query":
         event = EventFactory.create_event("analyze_query", customer_inquiry)
     
@@ -52,5 +39,5 @@ if __name__ == "__main__":
     pipeline = PipelineRegistry.get_pipeline(event)
     output = pipeline.run(event)
     print("Pipeline execution output:", output.data)
-    print(output.data['nodes'][0]['AnalyzeQuery'].name)
+    # print(output.data['nodes'][0]['AnalyzeQuery'].name)
     

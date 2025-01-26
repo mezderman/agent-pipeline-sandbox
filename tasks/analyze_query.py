@@ -21,7 +21,7 @@ class AnalyzeQuery(BaseTask):
         self.model = "gpt-4o-2024-08-06"
 
         self.response_model = create_model(
-            'Intent',
+            'ResponseModel',
             name=(self.Categories, ...),
             reason=(str, Field(description="The reason for selecting this category"))
         )

@@ -22,13 +22,8 @@ class BillingIssueData(EventData):
     description: Optional[str] = Field(None, description="Detailed description of the billing issue")
 
 class AnalyzeIssueData(EventData):
-    issue_id: str = Field(..., description="Unique identifier for the issue")
-    issue_type: str = Field(..., description="Type of issue (product/billing/other)")
     customer_id: str = Field(..., description="ID of the customer")
-    description: str = Field(..., description="Detailed description of the issue")
-    priority: str = Field(..., description="Priority level of the issue")
-    tags: List[str] = Field(default_factory=list, description="Tags for categorizing the issue")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata about the issue")
+    issue_description: str = Field(..., description="Description of the issue")
 
 class Event(BaseModel):
     event_key: str = Field(..., description="Key identifying the type of event")
@@ -37,12 +32,12 @@ class Event(BaseModel):
     def get_validated_data(self) -> EventData:
         """Returns type-validated data based on event_key"""
         if self.event_key == "product_issue":
-            return ProductIssueData(**self.data)
+            return AnalyzeIssueData(**self.data)  # Strict validation
         elif self.event_key == "billing_issue":
             return BillingIssueData(**self.data)
         elif self.event_key == "analyze_issue":
             return AnalyzeIssueData(**self.data)
-        return EventData(**self.data)
+        return EventData(**self.data)  # Basic validation
 
 class EventFactory:
     @staticmethod
