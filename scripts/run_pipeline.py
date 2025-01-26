@@ -13,6 +13,11 @@ if __name__ == "__main__":
     #TESTING
 
     # Test Case 1: Product Issue
+    customer_inquiry = {
+        "customer_id": "CUST-456",
+        "issue_description": "The device I purchased is not charging properly. What should I do?",
+    }
+    
     product_issue_data = {
         'product_id': 'PROD-123',
         'customer_id': 'CUST-456',
@@ -38,7 +43,7 @@ if __name__ == "__main__":
     elif test_case == "billing_issue":
         event = EventFactory.create_event("billing_issue", billing_issue_data)
     elif test_case == "analyze_query":
-        event = EventFactory.create_event("analyze_query", product_issue_data)
+        event = EventFactory.create_event("analyze_query", customer_inquiry)
     
     # Get type-validated data
     validated_data = event.get_validated_data()

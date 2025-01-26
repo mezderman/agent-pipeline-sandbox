@@ -7,13 +7,13 @@ from enum import Enum
 
 class AnalyzeQuery(BaseTask):
     class Categories(str, Enum):
-        """Enumeration of categories for incoming query.
-        Pick specific if the query seeks detailed or pinpointed information
-        Pick summary if the query seeks a broad overview or general understanding
-        Pick other if the query if doesnt fit into specific or summary
+        """Enumeration of categories for incoming queries.
+        - PRODUCT_ISSUE: If the query relates to a problem with a product.
+        - BILLING_ISSUE: If the query relates to a billing or payment issue.
+        - OTHER: If the query does not fit into product or billing issues.
         """
-        SPECIFIC = "specific"
-        SUMMARY = "summary"
+        PRODUCT_ISSUE = "product_issue"
+        BILLING_ISSUE = "billing_issue"
         OTHER = "other"
 
     def __init__(self):
