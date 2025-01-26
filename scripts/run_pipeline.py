@@ -13,7 +13,7 @@ if __name__ == "__main__":
     product_issue_data = {
         'product_id': 'PROD-123',
         'customer_id': 'CUST-456',
-        'issue_description': 'Product not working as expected',
+        'issue_description': 'What are the highlights of this article?',
         'severity': 'high'
     }
     
