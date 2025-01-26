@@ -1,6 +1,9 @@
 from pipelines.registry import register_all_pipelines
 from core.registry import PipelineRegistry
-from core.event import Event, EventFactory
+from core.event import EventFactory
+from dotenv import load_dotenv
+
+load_dotenv()
 
 if __name__ == "__main__":
     # Step 1: Register all pipelines
