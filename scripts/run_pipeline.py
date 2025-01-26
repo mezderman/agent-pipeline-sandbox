@@ -51,7 +51,6 @@ if __name__ == "__main__":
     # Get and run the appropriate pipeline
     pipeline = PipelineRegistry.get_pipeline(event)
     output = pipeline.run(event)
-
-    output.model_dump()
-
     print("Pipeline execution output:", output.data)
+    print(output.data['nodes'][0]['AnalyzeQuery'].name)
+    
