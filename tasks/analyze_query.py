@@ -24,8 +24,8 @@ class AnalyzeQuery(BaseTask):
         self.client = instructor.from_openai(OpenAI())
         self.model = "gpt-4o-2024-08-06"
 
-    def analyze_query(self, query: str):
-        choice = self.client.chat.completions.create(
+    def create_completion(self, query: str):
+        completion = self.client.chat.completions.create(
             model=self.model,
             response_model=self.AnalyzeResponseModel,
             max_retries=1, 
@@ -35,12 +35,12 @@ class AnalyzeQuery(BaseTask):
             ],
             )
             
-        return choice
+        return completion
     
     def execute(self, event: Event) -> Event:
         print("Analyzing issue...")
         issue_data = event.data
-        result = self.analyze_query(issue_data['issue_description'])
+        result = self.create_completion(issue_data['issue_description'])
         
         # Initialize nodes list if it doesn't exist
         if 'nodes' not in event.data:

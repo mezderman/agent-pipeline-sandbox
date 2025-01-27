@@ -18,9 +18,6 @@ if __name__ == "__main__":
         "issue_description": "The device I purchased is not charging properly. What should I do?",
     }
     
-   
-    
-   
 
     # Choose which test to run
     test_case = "product_issue"  # Change this to test different scenarios
