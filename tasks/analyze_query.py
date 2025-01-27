@@ -39,7 +39,7 @@ class AnalyzeQuery(BaseTask):
         return completion
     
     def execute(self, event: Event) -> Event:
-        print("Analyzing issue...")
+        print("Analyzing issue and direct to the right department...")
         issue_data = event.data
         result = self.create_completion(issue_data['issue_description'])
         
