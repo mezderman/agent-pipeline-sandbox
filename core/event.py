@@ -23,7 +23,7 @@ class EventData(BaseModel):
 
 class AnalyzeIssueData(EventData):
     customer_id: str = Field(..., description="ID of the customer")
-    issue_description: str = Field(..., description="Description of the issue")
+    content: str = Field(..., description="Content of the customer inquiry")
 
 class Event(BaseModel):
     event_key: str = Field(..., description="Key identifying the type of event")

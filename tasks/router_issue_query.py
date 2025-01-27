@@ -31,7 +31,7 @@ class RouterQuery(BaseTask):
     def execute(self, event: Event) -> Event:
         print("Routing issue to the right department...")
         issue_data = event.data
-        result = self.create_completion(issue_data['issue_description'])
+        result = self.create_completion(issue_data['content'])
         
         # Initialize nodes dict if it doesn't exist
         if 'nodes' not in event.data:

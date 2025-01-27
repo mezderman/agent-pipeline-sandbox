@@ -38,7 +38,7 @@ class BillingIssue(BaseTask):
     def execute(self, event: Event) -> Event:
         print("Analyzing Billing issue...")
         issue_data = event.data
-        result = self.create_completion(issue_data['issue_description'])
+        result = self.create_completion(issue_data['content'])
         
         # Add to nodes with ProductIssue key
         event.data['nodes']['BillingIssue'] = result.model_dump()

@@ -18,7 +18,7 @@ class PipelineRunner:
                 next_pipeline_key,
                 {
                     "customer_id": event.data.get("customer_id"),
-                    "issue_description": event.data.get("issue_description"),
+                    "content": event.data.get("content"),
                     "nodes": result.data.get("nodes", {})  # result is the Event object
                 }
             )

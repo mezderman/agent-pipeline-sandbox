@@ -7,10 +7,6 @@ from core.pipeline_runner import PipelineRunner
 load_dotenv()
 
 if __name__ == "__main__":
-    # Step 1: Register all pipelines
-    register_all_pipelines()
-
-
     #TESTING
     #billing issues
     #I was charged twice for my subscription. Can I get a refund for the extra charge?
@@ -20,10 +16,12 @@ if __name__ == "__main__":
     #The device I purchased is not charging properly. What should I do?
     customer_inquiry = {
         "customer_id": "CUST-456",
-        "issue_description": "Can you provide me with a detailed summary of my last three months' bills?",
+        "content": "Can you provide me with a detailed summary of my last three months' bills?",
     }
+    # Step 1: Register all pipelines
+    register_all_pipelines()
     
-    # Create the initial event
+    # start the entry point pipeline
     event = EventFactory.create_event("router_query", customer_inquiry)
     
     # Create registry and runner
