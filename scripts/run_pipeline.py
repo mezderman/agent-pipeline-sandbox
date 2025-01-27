@@ -19,11 +19,11 @@ if __name__ == "__main__":
     }
     
 
-    # First run the analysis pipeline
-    test_case = "analyze_query"
-    event = EventFactory.create_event("analyze_query", customer_inquiry)
+    # First run the router pipeline
+    test_case = "router_query"
+    event = EventFactory.create_event("router_query", customer_inquiry)
     
-    # Get and run the analysis pipeline
+    # Get and run the router pipeline
     pipeline = PipelineRegistry.get_pipeline(event)
     output, next_pipeline_key = pipeline.run(event)  # This is a router pipeline
     

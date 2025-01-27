@@ -1,9 +1,9 @@
 from core.pipeline import Pipeline
-from tasks.analyze_query import AnalyzeQuery
+from tasks.router_issue_query import RouterQuery
 
-def create_analyze_query_pipeline():
+def create_router_query_pipeline():
     pipeline = Pipeline()
-    pipeline.add_task(AnalyzeQuery)
+    pipeline.add_task(RouterQuery)
     pipeline.set_next_pipeline_options({
         "product_issue": "product_issue",
         "billing_issue": "billing_issue",

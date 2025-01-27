@@ -16,8 +16,8 @@ class Categories(str, Enum):
     BILLING_ISSUE = "billing_issue"
     OTHER = "other"
 
-class AnalyzeQuery(BaseTask):
-    class AnalyzeResponseModel(BaseModel):
+class RouterQuery(BaseTask):
+    class RouterResponseModel(BaseModel):
         intent: Categories
         reason: str = Field(description="The reason for selecting this category")
 
@@ -28,7 +28,7 @@ class AnalyzeQuery(BaseTask):
     def create_completion(self, query: str):
         completion = self.client.chat.completions.create(
             model=self.model,
-            response_model=self.AnalyzeResponseModel,
+            response_model=self.RouterResponseModel,
             max_retries=1, 
             messages=[
                 {"role": "system", "content": "You're a helpful personal assistant that can classify incoming messages."},
@@ -39,7 +39,7 @@ class AnalyzeQuery(BaseTask):
         return completion
     
     def execute(self, event: Event) -> Event:
-        print("Analyzing issue and direct to the right department...")
+        print("Routing issue to the right department...")
         issue_data = event.data
         result = self.create_completion(issue_data['issue_description'])
         
@@ -47,8 +47,8 @@ class AnalyzeQuery(BaseTask):
         if 'nodes' not in event.data:
             event.data['nodes'] = {}
             
-        # Add to nodes with AnalyzeQuery key
-        event.data['nodes']['AnalyzeQuery'] = result.model_dump()
+        # Add to nodes with RouterQuery key
+        event.data['nodes']['RouterQuery'] = result.model_dump()
         
         return event
 

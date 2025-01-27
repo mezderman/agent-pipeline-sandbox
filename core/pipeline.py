@@ -65,7 +65,7 @@ class Pipeline:
         
         # Only router pipelines return a tuple
         if self.is_router and self.next_pipeline_options:
-            decision_value = result.data['nodes']['AnalyzeQuery']['intent']
+            decision_value = result.data['nodes']['RouterQuery']['intent']
             next_pipeline_key = self.get_next_pipeline_key(decision_value)
             return result, next_pipeline_key
             
