@@ -3,22 +3,12 @@ from core.event import Event
 from pydantic import BaseModel, Field
 from openai import OpenAI
 import instructor
-from enum import Enum
 from core.config import settings
-
-class Categories(str, Enum):
-    """Enumeration of categories for incoming queries.
-    - PRODUCT_ISSUE: If the query relates to a problem with a product.
-    - BILLING_ISSUE: If the query relates to a billing or payment issue.
-    - OTHER: If the query does not fit into product or billing issues.
-    """
-    PRODUCT_ISSUE = "product_issue"
-    BILLING_ISSUE = "billing_issue"
-    OTHER = "other"
+from router_types.issue_types import IssueTypes
 
 class RouterQuery(BaseTask):
     class RouterResponseModel(BaseModel):
-        intent: Categories
+        intent: IssueTypes
         reason: str = Field(description="The reason for selecting this category")
 
     def __init__(self):
