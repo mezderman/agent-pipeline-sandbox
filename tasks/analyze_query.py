@@ -1,35 +1,33 @@
 from tasks.base_task import BaseTask
 from core.event import Event
-from pydantic import Field, create_model
+from pydantic import BaseModel, Field
 from openai import OpenAI
 import instructor
 from enum import Enum
 
+class Categories(str, Enum):
+    """Enumeration of categories for incoming queries.
+    - PRODUCT_ISSUE: If the query relates to a problem with a product.
+    - BILLING_ISSUE: If the query relates to a billing or payment issue.
+    - OTHER: If the query does not fit into product or billing issues.
+    """
+    PRODUCT_ISSUE = "product_issue"
+    BILLING_ISSUE = "billing_issue"
+    OTHER = "other"
+
 class AnalyzeQuery(BaseTask):
-    class Categories(str, Enum):
-        """Enumeration of categories for incoming queries.
-        - PRODUCT_ISSUE: If the query relates to a problem with a product.
-        - BILLING_ISSUE: If the query relates to a billing or payment issue.
-        - OTHER: If the query does not fit into product or billing issues.
-        """
-        PRODUCT_ISSUE = "product_issue"
-        BILLING_ISSUE = "billing_issue"
-        OTHER = "other"
+    class AnalyzeResponseModel(BaseModel):
+        intent: Categories
+        reason: str = Field(description="The reason for selecting this category")
 
     def __init__(self):
         self.client = instructor.from_openai(OpenAI())
         self.model = "gpt-4o-2024-08-06"
 
-        self.response_model = create_model(
-            'ResponseModel',
-            name=(self.Categories, ...),
-            reason=(str, Field(description="The reason for selecting this category"))
-        )
-       
     def analyze_query(self, query: str):
         choice = self.client.chat.completions.create(
             model=self.model,
-            response_model=self.response_model,
+            response_model=self.AnalyzeResponseModel,
             max_retries=1, 
             messages=[
                 {"role": "system", "content": "You're a helpful personal assistant that can classify incoming messages."},
@@ -50,7 +48,7 @@ class AnalyzeQuery(BaseTask):
             
         # Add to nodes with AnalyzeQuery key
         event.data['nodes'].append({
-            "AnalyzeQuery": result
+            "AnalyzeQuery": result.model_dump()
         })
         
         # print(f"Analyzing issue with data: {issue_data}")

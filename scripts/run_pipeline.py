@@ -23,7 +23,7 @@ if __name__ == "__main__":
    
 
     # Choose which test to run
-    test_case = "analyze_query"  # Change this to test different scenarios
+    test_case = "product_issue"  # Change this to test different scenarios
     
     if test_case == "product_issue":
         event = EventFactory.create_event("product_issue", customer_inquiry)
