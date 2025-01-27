@@ -17,7 +17,7 @@ class PipelineRunner:
             next_event = EventFactory.create_event(
                 next_pipeline_key,
                 {
-                    "customer_id": event.data.get("customer_id"),
+                    "user_id": event.data.get("user_id"),
                     "content": event.data.get("content"),
                     "nodes": result.data.get("nodes", {})  # result is the Event object
                 }

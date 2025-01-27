@@ -9,21 +9,9 @@ class EventData(BaseModel):
         description="Dictionary of pipeline processing nodes"
     )
 
-# class ProductIssueData(EventData):
-#     product_id: str = Field(..., description="ID of the product with issue")
-#     customer_id: str = Field(..., description="ID of the customer reporting the issue")
-#     issue_description: str = Field(..., description="Description of the product issue")
-#     severity: str = Field(..., description="Severity level of the issue")
-
-# class BillingIssueData(EventData):
-#     customer_id: str = Field(..., description="ID of the customer with billing issue")
-#     amount: float = Field(..., description="Amount involved in the billing issue")
-#     issue_type: str = Field(..., description="Type of billing issue")
-#     description: Optional[str] = Field(None, description="Detailed description of the billing issue")
-
 class AnalyzeIssueData(EventData):
-    customer_id: str = Field(..., description="ID of the customer")
-    content: str = Field(..., description="Content of the customer inquiry")
+    user_id: str = Field(..., description="ID of the user")
+    content: str = Field(..., description="Content of the user inquiry")
 
 class Event(BaseModel):
     event_key: str = Field(..., description="Key identifying the type of event")

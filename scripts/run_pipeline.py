@@ -15,8 +15,8 @@ if __name__ == "__main__":
     #product issues
     #The device I purchased is not charging properly. What should I do?
     customer_inquiry = {
-        "customer_id": "CUST-456",
-        "content": "Can you provide me with a detailed summary of my last three months' bills?",
+        "user_id": "CUST-456",
+        "content": "The device I purchased is not charging properly. What should I do?",
     }
     # Step 1: Register all pipelines
     register_all_pipelines()
