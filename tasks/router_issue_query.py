@@ -29,7 +29,6 @@ class RouterQuery(BaseTask):
         return completion
     
     def execute(self, event: Event) -> Event:
-        print("Routing issue to the right department...")
         issue_data = event.data
         result = self.create_completion(issue_data['content'])
         

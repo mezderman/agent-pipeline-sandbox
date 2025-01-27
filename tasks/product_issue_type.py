@@ -47,7 +47,7 @@ class ProductIssueType(BaseTask):
         return completion
     
     def execute(self, event: Event) -> Event:
-        print("Analyzing Product issue...")
+        print("Analyzing product issue type...")
         issue_data = event.data
         result = self.create_completion(issue_data['content'])
         

@@ -3,6 +3,7 @@ from core.registry import PipelineRegistry
 from core.event import EventFactory
 from dotenv import load_dotenv
 from core.pipeline_runner import PipelineRunner
+import json
 
 load_dotenv()
 
@@ -30,5 +31,5 @@ if __name__ == "__main__":
     
     # Run the pipeline chain
     final_output = runner.run_pipeline(event)
-    print("\nFinal Pipeline output:", final_output.data)
+    print("\nFinal Pipeline output:\n", json.dumps(final_output.data, indent=2))
     

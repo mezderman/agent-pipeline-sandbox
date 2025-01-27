@@ -4,7 +4,8 @@ from tasks.base_task import BaseTask
 from typing import Type, Union, Dict, Optional, Tuple
 
 class Pipeline:
-    def __init__(self):
+    def __init__(self, name: str = ""):
+        self.name = name
         self.start_task = None
         self.current_task = None
         self.next_pipeline_options: Optional[Dict[str, str]] = None
@@ -41,8 +42,9 @@ class Pipeline:
         Run the pipeline and return the result and next pipeline key if any.
         """
         if not self.start_task:
-            raise RuntimeError("Pipeline has no tasks")
+            raise RuntimeError(f"Pipeline '{self.name}' has no tasks")
         
+        print(f"\nExecuting pipeline: {self.name}")  # Add logging
         result = self.start_task.execute(event)
         
         # If this is a router pipeline, check for next pipeline
