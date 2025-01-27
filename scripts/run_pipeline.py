@@ -25,23 +25,19 @@ if __name__ == "__main__":
     
     # Get and run the analysis pipeline
     pipeline = PipelineRegistry.get_pipeline(event)
-    output = pipeline.run(event)
+    output, next_pipeline_key = pipeline.run(event)  # This is a router pipeline
     
-    # Get the intent from analysis
-    analyze_result = output.data['nodes']['AnalyzeQuery']
-    intent = analyze_result['intent']
-    
-    # Route to appropriate pipeline based on intent
-    if intent == 'product_issue':
-        print("\nRouting to Product Issue Pipeline...")
-        product_event = EventFactory.create_event("product_issue", output.data)
-        product_pipeline = PipelineRegistry.get_pipeline(product_event)
-        final_output = product_pipeline.run(product_event)
-    elif intent == 'billing_issue':
-        print("\nRouting to Billing Issue Pipeline...")
-        # billing_event = EventFactory.create_event("billing_issue", output.data)
-        # billing_pipeline = PipelineRegistry.get_pipeline(billing_event)
-        # final_output = billing_pipeline.run(billing_event)
-    
-    print("\nFinal Pipeline output:", final_output.data)
+    if next_pipeline_key:
+        print(f"\nRouting to {next_pipeline_key} Pipeline...")
+        # Create new event while preserving the nodes data
+        next_event = EventFactory.create_event(next_pipeline_key, {
+            "customer_id": customer_inquiry["customer_id"],
+            "issue_description": customer_inquiry["issue_description"],
+            "nodes": output.data["nodes"]  # Preserve the nodes data
+        })
+        next_pipeline = PipelineRegistry.get_pipeline(next_event)
+        final_output = next_pipeline.run(next_event)
+        print("\nFinal Pipeline output:", final_output.data)
+    else:
+        print("\nNo next pipeline specified")
     
