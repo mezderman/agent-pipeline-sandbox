@@ -11,19 +11,20 @@ if __name__ == "__main__":
 
 
     #TESTING
+    #billing issues
+    #I was charged twice for my subscription. Can I get a refund for the extra charge?
+    # Can you provide me with a detailed summary of my last three months' bills?
 
-    # Test Case 1: Product Issue
+    #product issues
+    #The device I purchased is not charging properly. What should I do?
     customer_inquiry = {
         "customer_id": "CUST-456",
-        "issue_description": "The device I purchased is not charging properly. What should I do?",
+        "issue_description": "I was charged twice for my subscription. Can I get a refund for the extra charge?",
     }
     
 
     # First run the router pipeline
-    test_case = "router_query"
     event = EventFactory.create_event("router_query", customer_inquiry)
-    
-    # Get and run the router pipeline
     pipeline = PipelineRegistry.get_pipeline(event)
     output, next_pipeline_key = pipeline.run(event)  # This is a router pipeline
     
