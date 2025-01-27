@@ -19,7 +19,7 @@ if __name__ == "__main__":
     #The device I purchased is not charging properly. What should I do?
     customer_inquiry = {
         "customer_id": "CUST-456",
-        "issue_description": "I was charged twice for my subscription. Can I get a refund for the extra charge?",
+        "issue_description": "Can you provide me with a detailed summary of my last three months' bills?",
     }
     
 
