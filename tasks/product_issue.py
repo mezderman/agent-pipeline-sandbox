@@ -5,6 +5,7 @@ from pydantic import Field, create_model
 from openai import OpenAI
 import instructor
 from enum import Enum
+from core.config import settings
 
 class Priority(str, Enum):
     HIGH = "high"
@@ -19,7 +20,7 @@ class ProductIssue(BaseTask):
 
     def __init__(self):
         self.client = instructor.from_openai(OpenAI())
-        self.model = "gpt-4o-2024-08-06"
+        self.model = settings.OPENAI_MODEL
        
     def create_completion(self, query: str):
         completion = self.client.chat.completions.create(
@@ -40,9 +41,7 @@ class ProductIssue(BaseTask):
         result = self.create_completion(issue_data['issue_description'])
         
         # Add to nodes with ProductIssue key
-        event.data['nodes'].append({
-            "ProductIssue": result.model_dump()
-        })
+        event.data['nodes']['ProductIssue'] = result.model_dump()
         
         return event
 

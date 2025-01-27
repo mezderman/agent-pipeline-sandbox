@@ -4,6 +4,7 @@ from pydantic import BaseModel, Field
 from openai import OpenAI
 import instructor
 from enum import Enum
+from core.config import settings
 
 class Categories(str, Enum):
     """Enumeration of categories for incoming queries.
@@ -22,7 +23,7 @@ class AnalyzeQuery(BaseTask):
 
     def __init__(self):
         self.client = instructor.from_openai(OpenAI())
-        self.model = "gpt-4o-2024-08-06"
+        self.model = settings.OPENAI_MODEL
 
     def create_completion(self, query: str):
         completion = self.client.chat.completions.create(
@@ -42,15 +43,12 @@ class AnalyzeQuery(BaseTask):
         issue_data = event.data
         result = self.create_completion(issue_data['issue_description'])
         
-        # Initialize nodes list if it doesn't exist
+        # Initialize nodes dict if it doesn't exist
         if 'nodes' not in event.data:
-            event.data['nodes'] = []
+            event.data['nodes'] = {}
             
         # Add to nodes with AnalyzeQuery key
-        event.data['nodes'].append({
-            "AnalyzeQuery": result.model_dump()
-        })
+        event.data['nodes']['AnalyzeQuery'] = result.model_dump()
         
-        # print(f"Analyzing issue with data: {issue_data}")
         return event
 

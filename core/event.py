@@ -4,9 +4,9 @@ from pydantic import BaseModel, Field
 
 class EventData(BaseModel):
     """Base model for event data"""
-    nodes: List['EventData'] = Field(
-        default_factory=list, 
-        description="List of pipeline processing nodes"
+    nodes: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="Dictionary of pipeline processing nodes"
     )
 
 # class ProductIssueData(EventData):
@@ -27,14 +27,14 @@ class AnalyzeIssueData(EventData):
 
 class Event(BaseModel):
     event_key: str = Field(..., description="Key identifying the type of event")
-    data: Dict[str, Any] = Field(default_factory=lambda: {"nodes": []})
+    data: Dict[str, Any] = Field(default_factory=lambda: {"nodes": {}})
 
     def get_validated_data(self) -> EventData:
         """Returns type-validated data based on event_key"""
         if self.event_key == "product_issue":
             return AnalyzeIssueData(**self.data)  # Strict validation
         elif self.event_key == "billing_issue":
-            return BillingIssueData(**self.data)
+            return AnalyzeIssueData(**self.data)
         elif self.event_key == "analyze_issue":
             return AnalyzeIssueData(**self.data)
         return EventData(**self.data)  # Basic validation

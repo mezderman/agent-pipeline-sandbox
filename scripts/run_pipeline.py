@@ -19,22 +19,29 @@ if __name__ == "__main__":
     }
     
 
-    # Choose which test to run
-    test_case = "product_issue"  # Change this to test different scenarios
+    # First run the analysis pipeline
+    test_case = "analyze_query"
+    event = EventFactory.create_event("analyze_query", customer_inquiry)
     
-    if test_case == "product_issue":
-        event = EventFactory.create_event("product_issue", customer_inquiry)
-    elif test_case == "billing_issue":
-        event = EventFactory.create_event("billing_issue", customer_inquiry)
-    elif test_case == "analyze_query":
-        event = EventFactory.create_event("analyze_query", customer_inquiry)
-    
-    # Get type-validated data
-    validated_data = event.get_validated_data()
-
-    # Get and run the appropriate pipeline
+    # Get and run the analysis pipeline
     pipeline = PipelineRegistry.get_pipeline(event)
     output = pipeline.run(event)
-    print("Pipeline execution output:", output.data)
-    # print(output.data['nodes'][0]['AnalyzeQuery'].name)
+    
+    # Get the intent from analysis
+    analyze_result = output.data['nodes']['AnalyzeQuery']
+    intent = analyze_result['intent']
+    
+    # Route to appropriate pipeline based on intent
+    if intent == 'product_issue':
+        print("\nRouting to Product Issue Pipeline...")
+        product_event = EventFactory.create_event("product_issue", output.data)
+        product_pipeline = PipelineRegistry.get_pipeline(product_event)
+        final_output = product_pipeline.run(product_event)
+    elif intent == 'billing_issue':
+        print("\nRouting to Billing Issue Pipeline...")
+        # billing_event = EventFactory.create_event("billing_issue", output.data)
+        # billing_pipeline = PipelineRegistry.get_pipeline(billing_event)
+        # final_output = billing_pipeline.run(billing_event)
+    
+    print("\nFinal Pipeline output:", final_output.data)
     
