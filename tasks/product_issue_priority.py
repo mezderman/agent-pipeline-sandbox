@@ -13,7 +13,7 @@ class Priority(str, Enum):
     LOW = "low"
 
 
-class ProductIssue(BaseTask):
+class ProductIssuePriority(BaseTask):
     class ProductResponseModel(BaseModel):
         priority: Priority
         reason: str = Field(description="The reason for selecting priority")
