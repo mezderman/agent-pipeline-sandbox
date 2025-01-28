@@ -4,6 +4,7 @@ from core.event import EventFactory
 from dotenv import load_dotenv
 from core.pipeline_runner import PipelineRunner
 import json
+import sys
 
 load_dotenv()
 
@@ -17,7 +18,7 @@ if __name__ == "__main__":
     #The device I purchased is not charging properly. What should I do?
     customer_inquiry = {
         "user_id": "CUST-456",
-        "content": "The device I purchased is not charging properly. What should I do?",
+        "content": "Can you provide me with a detailed summary of my last three months' bills?",
     }
     # Step 1: Register all pipelines
     register_all_pipelines()
@@ -31,5 +32,11 @@ if __name__ == "__main__":
     
     # Run the pipeline chain
     final_output = runner.run_pipeline(event)
-    print("\nFinal Pipeline output:\n", json.dumps(final_output.data, indent=2))
+
+    # Increase d
+
+    print("\nFinal Pipeline output:")
+
+    json.dump(final_output.data, sys.stdout, indent=4, ensure_ascii=False)
+print()  # Ad
     
