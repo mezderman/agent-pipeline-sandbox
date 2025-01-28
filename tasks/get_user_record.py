@@ -15,7 +15,6 @@ from typing import List
 class GetUserRecord(BaseTask):
     class UserRecordResponseModel(BaseModel):
         purchases: List[str] = Field(description="List of purchases made by the user")
-        billing_history: List[str] = Field(description="List of billing history for the user")
         product_issues: List[str] = Field(description="List of product issues reported by the user")
 
         
@@ -29,15 +28,9 @@ class GetUserRecord(BaseTask):
         mock_data = {
             'CUST-456': {
                 'purchases': [
-                    "Premium Plan Subscription (2024-01-15)",
-                    "Smart Device X-1000 (2023-12-01)",
-                    "Extended Warranty (2023-12-01)"
-                ],
-                'billing_history': [
-                    f"$29.99 - Monthly subscription ({(today - timedelta(days=0)).strftime('%Y-%m-%d')})",
-                    f"$29.99 - Monthly subscription ({(today - timedelta(days=30)).strftime('%Y-%m-%d')})",
-                    f"$29.99 - Monthly subscription ({(today - timedelta(days=60)).strftime('%Y-%m-%d')})",
-                    "$299.99 - Smart Device X-1000 (2023-12-01)"
+                    f"Premium Plan Subscription ({(today - timedelta(days=40)).strftime('%Y-%m-%d')})",
+                    f"Smart Device X-1000 ({(today - timedelta(days=50)).strftime('%Y-%m-%d')})",
+                    f"Extended Warranty ({(today - timedelta(days=60)).strftime('%Y-%m-%d')})"
                 ],
                 'product_issues': [
                     "Device connectivity issue (2024-02-15) - Resolved",
@@ -49,7 +42,6 @@ class GetUserRecord(BaseTask):
         # Return mock data for the user, or empty data if user not found
         user_data = mock_data.get(user_id, {
             'purchases': [],
-            'billing_history': [],
             'product_issues': []
         })
         

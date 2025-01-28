@@ -6,30 +6,44 @@ import instructor
 from enum import Enum
 from core.config import settings
 from typing import List
+from datetime import datetime
 
 class Categories(str, Enum):
-    COMPLETED = "completed"
-    HUMAN_IN_LOOP = "human_in_loop"
+    """Enumeration of categories that can be used to resolve billing issues.
+    - SEND_EMAIL: Respond to user by email.
+    - MORE_INFO: We dont have enough information to resolve the issue.
+    - NO_ACTION_NEEDED: No action needed.
+    """
+    SEND_EMAIL = "send_email"
+    MORE_INFO = "more_info"
     NO_ACTION_NEEDED = "no_action_needed"
 
 class BillingIssueResolution(BaseTask):
     class BillingIssueResolutionResponseModel(BaseModel):
-        resolution: str = Field(description="The resolution to the billing issue")
-        email_response: str = Field(description="The email response to the user")
-        category: Categories = Field(description="The category of the resolution")
-        next_steps: List[str] = Field(description="List of recommended next steps")
+        categories: Categories
+        reason: str = Field(description="The reason for selecting a category. If you need more information, say what information you are missing")
 
     def __init__(self):
         self.client = instructor.from_openai(OpenAI())
         self.model = settings.OPENAI_MODEL
         self.prompt_template = """
-Summarize the last 3 months of billing history and purchases.
+            Given the following context:\n
+            TODAY'S DATE: 
+            {today}
+            
+            ISSUE_DISCOVERY:
+            {user_record}
 
-USER INFORMATION:
-{user_record}
+            USER_QUERY:
+            {content}
 
-Write an emailresponse to user query {content}. Please ensure your response is professional and empathetic.
-"""
+            Recommend the appropriate action to take to resolve the issue from available categories.
+            Solve it step by step:
+            1. Identify the issue
+            2. Make sure you have enough information to summarize for the timeframe requested
+            3. Recommend the appropriate action
+            4. Provide a reason for the action
+        """
 
     def create_completion(self, prompt: str):
         completion = self.client.chat.completions.create(
@@ -37,7 +51,7 @@ Write an emailresponse to user query {content}. Please ensure your response is p
             response_model=self.BillingIssueResolutionResponseModel,
             max_retries=1, 
             messages=[
-                {"role": "system", "content": "You're a helpful billing support assistant that resolves billing issues."},
+                {"role": "system", "content": "You are an assistant that analyzes user queries and context to recommend actions. Based on the provided data, suggest one action only"},
                 {"role": "user", "content": prompt},
             ],
         )
@@ -48,12 +62,21 @@ Write an emailresponse to user query {content}. Please ensure your response is p
         
         # Get user data and billing history
         user_record = event.data['nodes'].get('UserRecord', {})
-        
-        # Format the prompt with user data
-        prompt = self.prompt_template.format(
-            content=event.data['content'],
-            user_record=user_record  # Pass the user_record dict directly
-        )
+        category = event.data['nodes'].get('BillingIssue', {}).get('category', '')
+        today = datetime.now().strftime('%Y-%m-%d')
+        match category:
+            case "summary":
+                prompt = self.prompt_template.format(
+                    content=event.data['content'],
+                    user_record=user_record,
+                    today=today
+                )
+            case _:  # Default case
+                prompt = self.prompt_template.format(
+                    content=event.data['content'],
+                    user_record=user_record,
+                    today=today
+                )
         
         # Get resolution
         result = self.create_completion(prompt)
