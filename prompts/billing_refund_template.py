@@ -17,8 +17,9 @@ USER_QUERY:
 ### Instructions:
 You are tasked todecide whether or not a user request for a refund is valid. Solve this step by step:
 1. **Understand the query**: Identify the user's intent .
-2. **Review the data**: Analyze user's PURCHASES I shared and confirm if the user has a valid reason for a refund.
-3. **Provide a detailed explanation**: provide a detailed explanation of the refund process and any necessary steps.
+2. **Review the data**: Analyze user's PURCHASES I shared and look for evidence that the user has a valid reason for a refund. 
+If you find evidence, provide explanation of the refund process and any necessary steps. 
+If you do not find evidence, provide a detailed explanation of why the user's request is not valid and ask for more information. Do not provide a refund.
 3. **Request clarification only if essential**: If the query is unclear or requires additional information that cannot be inferred, state what is missing and why it is needed.
 
 

@@ -41,6 +41,12 @@ class GetUserRecord(BaseTask):
                         description="Annual subscription to the premium service plan with access to exclusive features and priority support."
                     ),
                     self.PurchaseModel(
+                        item="Premium Plan Subscription",
+                        date=(today - timedelta(days=30)).strftime('%Y-%m-%d'),
+                        price="$99.99",
+                        description="Annual subscription to the premium service plan with access to exclusive features and priority support."
+                    ),
+                    self.PurchaseModel(
                         item="Smart Device X-1000",
                         date=(today - timedelta(days=40)).strftime('%Y-%m-%d'),
                         price="$499.99",
