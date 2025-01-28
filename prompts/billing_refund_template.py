@@ -27,6 +27,4 @@ If you do not find evidence, provide a detailed explanation of why the user's re
 ### Examples of valid refund requests:
 - Accidental or duplicate charges.
 - Dissatisfaction with a product or service.
-- Cancellations requested before service or product use.
-- Billing for a subscription the user no longer needs or canceled.
 """ 

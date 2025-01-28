@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     customer_inquiry = {
         "user_id": "CUST-456",
-        "content": "Please summarize all my purchases and transactions from Decmber 2024 with itemized details",
+        "content": "I was charged twice for my Premium Plan subscription. Can I get a refund for the extra charge",
     }
     # Step 1: Register all pipelines
     register_all_pipelines()
