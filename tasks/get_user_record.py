@@ -13,8 +13,14 @@ from typing import List
 
 
 class GetUserRecord(BaseTask):
+    class PurchaseModel(BaseModel):
+        item: str = Field(description="Name of the purchased item")
+        date: str = Field(description="Purchase date in YYYY-MM-DD format")
+        price: str = Field(description="Price of the item")
+        description: str = Field(description="Detailed description of the item")
+        
     class UserRecordResponseModel(BaseModel):
-        purchases: List[str] = Field(description="List of purchases made by the user")
+        purchases: List["GetUserRecord.PurchaseModel"] = Field(description="List of purchases made by the user")
         product_issues: List[str] = Field(description="List of product issues reported by the user")
 
         
@@ -28,9 +34,24 @@ class GetUserRecord(BaseTask):
         mock_data = {
             'CUST-456': {
                 'purchases': [
-                    f"Premium Plan Subscription ({(today - timedelta(days=40)).strftime('%Y-%m-%d')})",
-                    f"Smart Device X-1000 ({(today - timedelta(days=50)).strftime('%Y-%m-%d')})",
-                    f"Extended Warranty ({(today - timedelta(days=60)).strftime('%Y-%m-%d')})"
+                    self.PurchaseModel(
+                        item="Premium Plan Subscription",
+                        date=(today - timedelta(days=30)).strftime('%Y-%m-%d'),
+                        price="$99.99",
+                        description="Annual subscription to the premium service plan with access to exclusive features and priority support."
+                    ),
+                    self.PurchaseModel(
+                        item="Smart Device X-1000",
+                        date=(today - timedelta(days=40)).strftime('%Y-%m-%d'),
+                        price="$499.99",
+                        description="High-performance smart device featuring voice recognition, AI-powered assistant, and home automation capabilities."
+                    ),
+                    self.PurchaseModel(
+                        item="Extended Warranty",
+                        date=(today - timedelta(days=41)).strftime('%Y-%m-%d'),
+                        price="$59.99",
+                        description="Two-year extended warranty for Smart Device X-1000 covering repairs and replacement for manufacturing defects."
+                    )
                 ],
                 'product_issues': [
                     "Device connectivity issue (2024-02-15) - Resolved",
@@ -41,7 +62,7 @@ class GetUserRecord(BaseTask):
         
         # Return mock data for the user, or empty data if user not found
         user_data = mock_data.get(user_id, {
-            'purchases': [],
+            'purchases_summaries': [],
             'product_issues': []
         })
         

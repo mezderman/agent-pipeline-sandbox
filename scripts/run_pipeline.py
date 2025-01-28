@@ -13,12 +13,13 @@ if __name__ == "__main__":
     #billing issues
     #I was charged twice for my subscription. Can I get a refund for the extra charge?
     # Can you provide me with a detailed summary of my last three months' bills?
+    #Please summarize all my purchases and transactions from Decmber 2024 with itemized details.
 
     #product issues
     #The device I purchased is not charging properly. What should I do?
     customer_inquiry = {
         "user_id": "CUST-456",
-        "content": "Can you provide me with a detailed summary of my last month's bills?",
+        "content": "Please summarize all my purchases and transactions from this month with itemized details.",
     }
     # Step 1: Register all pipelines
     register_all_pipelines()
