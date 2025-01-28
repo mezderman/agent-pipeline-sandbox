@@ -7,6 +7,8 @@ from enum import Enum
 from core.config import settings
 from typing import List
 from datetime import datetime
+from prompts.billing_summary_template import BILLING_SUMMARY_TEMPLATE, BILLING_SUMMARY_SYSTEM_PROMPT
+from prompts.billing_refund_template import BILLING_REFUND_TEMPLATE, BILLING_REFUND_SYSTEM_PROMPT
 
 class Categories(str, Enum):
     """Enumeration of categories that can be used to resolve billing issues.
@@ -15,6 +17,7 @@ class Categories(str, Enum):
     - NO_ACTION_NEEDED: No action needed.
     """
     SEND_EMAIL = "send_email"
+    REFUND = "refund"
     MORE_INFO = "more_info"
     NO_ACTION_NEEDED = "no_action_needed"
 
@@ -26,33 +29,8 @@ class BillingIssueResolution(BaseTask):
     def __init__(self):
         self.client = instructor.from_openai(OpenAI())
         self.model = settings.OPENAI_MODEL
-        self.prompt_template = """
-            Given the following context:
-
-            TODAY'S DATE: 
-            {today}
-
-            PURCHASES:
-            {user_record}
-
-            USER_QUERY:
-            {content}
-
-            ### Instructions:
-            You are tasked with resolving the user's query by analyzing the provided data. Interpret time references date and provide a response accordingly. Solve this step by step:
-            1. **Understand the query**: Identify the user's intent and resolve ambiguous time reference.
-            2. **Review the data**: Analyze the records in PURCHASES SUMMARY that match the query, focusing on relevant purchases or issues.
-            3. **Extract relevant details**: 
-                - For purchases: Include item names, prices, purchase dates, and descriptions for the specified time frame.
-            5. **Request clarification only if essential**: If the query is unclear or requires additional information that cannot be inferred, state what is missing and why it is needed.
-
-
-            ### Example:
-            If the query asks for "a summary of bills for December 2024," include:
-            - A list of purchases from December 2024 with item names, dates, prices, and descriptions.
-            - Any other relevant context (e.g., issues related to those purchases).
-            - Reasons why some details might not be available, if applicable.
-            """
+        self.prompt_template = """"""
+        self.system_prompt = """"""
 
 
     def create_completion(self, prompt: str):
@@ -61,7 +39,7 @@ class BillingIssueResolution(BaseTask):
             response_model=self.BillingIssueResolutionResponseModel,
             max_retries=1, 
             messages=[
-                {"role": "system", "content": "You are an assistant that analyzes user queries and context to recommend actions. Based on the provided data, suggest one action only"},
+                {"role": "system", "content":self.system_prompt},
                 {"role": "user", "content": prompt},
             ],
         )
@@ -76,18 +54,22 @@ class BillingIssueResolution(BaseTask):
         today = datetime.now().strftime('%Y-%m-%d')
         match category:
             case "summary":
-                prompt = self.prompt_template.format(
-                    content=event.data['content'],
-                    user_record=user_record,
-                    today=today
-                )
+                self.system_prompt = BILLING_SUMMARY_SYSTEM_PROMPT
+                self.prompt_template = BILLING_SUMMARY_TEMPLATE
+
+            case "refund":
+                self.system_prompt = BILLING_REFUND_SYSTEM_PROMPT
+                self.prompt_template = BILLING_REFUND_TEMPLATE
+    
             case _:  # Default case
-                prompt = self.prompt_template.format(
+                self.system_prompt = BILLING_SUMMARY_SYSTEM_PROMPT
+                self.prompt_template = BILLING_SUMMARY_TEMPLATE
+                
+        prompt = self.prompt_template.format(
                     content=event.data['content'],
                     user_record=user_record,
                     today=today
                 )
-        # Get resolution
         result = self.create_completion(prompt)
         
         # Add to nodes
