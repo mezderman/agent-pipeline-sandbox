@@ -13,6 +13,7 @@ from prompts.billing_refund_template import BILLING_REFUND_TEMPLATE, BILLING_REF
 class Categories(str, Enum):
     """Enumeration of categories that can be used to resolve billing issues.
     - SEND_EMAIL: Respond to user by email.
+    - REFUND: Provide a refund.
     - MORE_INFO: We dont have enough information to resolve the issue.
     - NO_ACTION_NEEDED: No action needed.
     """
